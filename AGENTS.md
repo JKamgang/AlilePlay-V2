@@ -1,1 +1,41 @@
-AGENTS.md: Alile Play Autonomous Ecosystem1. Engineering & Migration Agent (The Architect)Mission: Maintain Feature-Sliced Design (FSD) integrity while migrating legacy logic.Strategy: * Ingest legacy games from the /versions folder and refactor into src/entities/Game.Implement "Golden State" zero-crash tolerance with global ErrorBoundaries.Cost Control: Default to Gemma 2 via Groq for boilerplate generation; escalate to Gemini 1.5 Pro only for complex logic merges.2. The AI Game Coach & Moderator (The Engagement Agent)Mission: Enhance player retention through real-time assistance and safe community interaction.Strategy:Game Coach: Analyze game state (e.g., FEN for Chess) and provide context-aware hints.Moderator: Real-time toxicity and spam filtering for "The Stage" and Live Chat.Tone: Helpful, encouraging, and professional.3. White-Label & Affiliate Agent (The Sales Agent)Mission: Automate B2B customization and B2C referral growth.Strategy:White-Labeling: Auto-generate CSS variable themes based on corporate client brand colors.Affiliate Tracking: Manage the mock-backend logic for referral links and tiered payouts.Corporate Portal: Enable "Admin-only" toggles to restrict games for specific organizational groups.4. Market Distribution Agent (The Publisher)Mission: Streamline deployment to Google Play, iOS, Amazon, and global marketplaces.Strategy:Prepare Capacitor/Cordova configurations for cross-platform builds.Auto-generate multilingual app store descriptions and SEO tags using the central TRANSLATIONS object.
+# Alile Play V2 - AI Guidelines & System Instructions
+
+## Project Vision
+"Alile Play" is a premium, global gaming platform designed for community engagement, monetization, and AI-powered interaction. The "Deep Reboot" (V2) focuses on a Feature-Sliced Design (FSD) architecture to ensure scalability, maintainability, and a professional-grade user experience.
+
+## Core Architectural Principles (FSD)
+We follow the **Feature-Sliced Design** methodology:
+- **App**: Global initialization, providers, and styles.
+- **Pages**: Full-screen views composed of widgets.
+- **Widgets**: Complex, self-contained UI blocks (e.g., GameBoard, Sidebar).
+- **Features**: User-facing actions with business value (e.g., PlayGame, Subscribe).
+- **Entities**: Business logic and data models (e.g., Game, User, Tournament).
+- **Shared**: Reusable UI components, utilities, and constants.
+
+## Golden Prompts for Jules (The Autonomous Agent)
+
+### 1. Architectural Setup
+"Initialize the project using Feature-Sliced Design. Move core logic into `src/entities` and user actions into `src/features`. Use TanStack Query for all data fetching and state synchronization."
+
+### 2. Monetization & Access Control
+"Implement a 5-tier subscription model (Preview, A, B, C, D). Use a Higher-Order Component (HOC) or Middleware to protect game routes and features based on the user's subscription level."
+
+### 3. AI Word Coach Integration
+"Integrate the Gemini API to create an 'AI Word Coach'. The coach should analyze the game state (e.g., in WordMaster or Chess) and provide strategic hints, educational context, or motivational feedback."
+
+### 4. Global Expansion (i18n)
+"Implement a robust internationalization system using `react-i18next`. Support English, French, and Spanish. Ensure all UI strings are externalized into translation files."
+
+### 5. Marketing & Community Automation
+"Build an 'AI Marketing Agent' that monitors platform activity (high scores, new tournaments) and generates automated 'Stage' updates to drive community engagement."
+
+## System Instructions for Development
+- **Styling**: Use Tailwind CSS with the "Technical Dashboard" or "Dark Luxury" design recipes. Prioritize high contrast, refined typography (Inter/JetBrains Mono), and purposeful animations using `motion`.
+- **Icons**: Use `lucide-react` exclusively.
+- **State Management**: Prefer TanStack Query for server state and React Context/Zustand for global UI state.
+- **Responsiveness**: Ensure all games and dashboards are "Mobile-First" but optimized for Desktop and Tablet.
+- **Error Handling**: Use robust Error Boundaries and provide user-friendly feedback for all failure states.
+
+## API Strategy
+- **Headless First**: Build with a simulated API layer (MSW or local services) that can be easily swapped for a real backend.
+- **Universal Access**: Expose documented endpoints/components that allow third-party embedding via iFrames.
