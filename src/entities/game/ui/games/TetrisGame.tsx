@@ -186,12 +186,21 @@ const TetrisGame: React.FC<TetrisGameProps> = ({ t }) => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 
-  const displayBoard = board.map(row => [...row]);
+  let displayBoard = board;
+  let hasClonedBoard = false;
   player.tetromino.forEach((row, y) => {
     row.forEach((value, x) => {
         if (value !== 0) {
-            if(displayBoard[y + player.pos.y]) {
-                displayBoard[y + player.pos.y][x + player.pos.x] = player.shapeKey;
+            const boardY = y + player.pos.y;
+            if(board[boardY]) {
+                if (!hasClonedBoard) {
+                    displayBoard = [...board];
+                    hasClonedBoard = true;
+                }
+                if (displayBoard[boardY] === board[boardY]) {
+                    displayBoard[boardY] = [...board[boardY]];
+                }
+                displayBoard[boardY][x + player.pos.x] = player.shapeKey;
             }
         }
     });
