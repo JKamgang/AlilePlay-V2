@@ -10,6 +10,7 @@ import CardGame from '@/entities/game/ui/games/CardGame';
 import ChessGame from '@/entities/game/ui/games/ChessGame';
 import CheckersGame from '@/entities/game/ui/games/CheckersGame';
 import MonopolyGame from '@/entities/game/ui/games/MonopolyGame';
+import TicTacToeGame from '@/entities/game/ui/games/TicTacToeGame';
 import GameGuide from '@/features/game-guide/ui/GameGuide';
 import { BookOpenIcon } from '@/shared/ui/Icons/Icons';
 
@@ -42,6 +43,8 @@ const GameContainer: React.FC<GameContainerProps> = ({ game, onClose, t }) => {
         return <CardGame game={game} t={t} />;
       case 'ludo':
         return <StaticGame game={game} t={t} />;
+      case 'tictactoe':
+        return <TicTacToeGame game={game} options={game.option} t={t} />;
       default:
         return <div className="text-white">This game is not implemented yet.</div>;
     }

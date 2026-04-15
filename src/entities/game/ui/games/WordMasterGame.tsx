@@ -2,7 +2,7 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { LETTER_SCORES, BOARD_LAYOUT, TILE_BAG } from '@/shared/constants';
 import { WordAnalysis } from '@/shared/types';
 import { TRANSLATIONS } from '@/shared/lib/i18n/translations';
-import { getWordAnalysis } from '@/shared/api/gemini/geminiService';
+import { aiRouter } from '@/shared/api/ai/aiRouter';
 import { ShieldCheckIcon } from '@/shared/ui/Icons/Icons';
 
 interface WordMasterGameProps {
@@ -147,9 +147,26 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     setIsLoading(true);
     setAnalysis(null);
     try {
-        const result = await getWordAnalysis(word, 'full');
+        const prompt = `Provide a detailed analysis for the word "${word}". Also provide a reasonable point score as if it were a Scrabble word.
+        Format your response exactly as JSON like this, with NO backticks or markdown, just the raw JSON:
+        {"definition": "the definition", "synonyms": ["word1", "word2"], "antonyms": ["word3"], "example": "an example", "etymology": "the origin", "score": 10}`;
+        const responseText = await aiRouter.generateContent({
+            userTier: 'free',
+            taskType: 'basic',
+            prompt: prompt,
+        });
+
+        let jsonStr = responseText.trim();
+        if (jsonStr.startsWith("```json")) {
+            jsonStr = jsonStr.slice(7, -3);
+        } else if (jsonStr.startsWith("```")) {
+            jsonStr = jsonStr.slice(3, -3);
+        }
+
+        const result = JSON.parse(jsonStr) as WordAnalysis;
         setAnalysis(result);
-    } catch {
+    } catch (e) {
+        console.error("Error analyzing word:", e);
         setError('Failed to get analysis.');
     } finally {
         setIsLoading(false);

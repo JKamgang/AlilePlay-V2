@@ -64,17 +64,28 @@ const MonopolyGame: React.FC<MonopolyGameProps> = () => {
         }
     };
 
+    const [zoom, setZoom] = useState(1);
+
     return (
         <div className="flex flex-col lg:flex-row items-start justify-center gap-8 p-4 text-white">
-            <div className="relative w-full max-w-md aspect-square bg-emerald-800 rounded-lg p-4 border-8 border-emerald-950 grid grid-cols-4 grid-rows-4 gap-1">
-                {PROPERTIES.map((prop, i) => (
-                    <div key={i} className={`flex flex-col items-center justify-center text-[10px] text-center p-1 rounded ${prop.type === 'prop' ? 'bg-white text-gray-900' : 'bg-emerald-700 text-white'} border border-emerald-900 relative`}>
-                        <span className="font-bold leading-tight">{prop.name}</span>
-                        {prop.type === 'prop' && <span className="text-[8px] mt-1">${prop.price}</span>}
-                        {players[0].pos === i && <div className={`w-4 h-4 rounded-full ${players[0].color} absolute top-1 right-1 shadow-md animate-bounce`} />}
-                        {owned[i] && <div className="absolute bottom-0 left-0 w-full h-1 bg-red-500" />}
-                    </div>
-                ))}
+            <div className="flex flex-col items-center">
+                <div className="mb-4 flex gap-2">
+                    <button onClick={() => setZoom(z => Math.max(0.5, z - 0.2))} className="bg-gray-700 px-3 py-1 rounded">- Zoom</button>
+                    <button onClick={() => setZoom(z => Math.min(2, z + 0.2))} className="bg-gray-700 px-3 py-1 rounded">+ Zoom</button>
+                </div>
+                <div
+                    className="relative max-w-md aspect-square bg-emerald-800 rounded-lg p-4 border-8 border-emerald-950 grid grid-cols-4 grid-rows-4 gap-1 origin-top transition-transform"
+                    style={{ transform: `scale(${zoom})`, width: '100%', minWidth: '300px' }}
+                >
+                    {PROPERTIES.map((prop, i) => (
+                        <div key={i} className={`flex flex-col items-center justify-center text-[10px] text-center p-1 rounded ${prop.type === 'prop' ? 'bg-white text-gray-900' : 'bg-emerald-700 text-white'} border border-emerald-900 relative`}>
+                            <span className="font-bold leading-tight">{prop.name}</span>
+                            {prop.type === 'prop' && <span className="text-[8px] mt-1">${prop.price}</span>}
+                            {players[0].pos === i && <div className={`w-4 h-4 rounded-full ${players[0].color} absolute top-1 right-1 shadow-md animate-bounce`} />}
+                            {owned[i] && <div className="absolute bottom-0 left-0 w-full h-1 bg-red-500" />}
+                        </div>
+                    ))}
+                </div>
             </div>
 
             <div className="flex-1 bg-gray-800/80 p-6 rounded-xl border border-gray-700 shadow-xl min-w-[300px]">

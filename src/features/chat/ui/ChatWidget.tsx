@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { TRANSLATIONS } from '@/shared/lib/i18n/translations';
-import { moderateChatMessage } from '@/shared/api/gemini/geminiService';
+import { aiRouter } from '@/shared/api/ai/aiRouter';
 
 interface ChatWidgetProps {
     t: (key: keyof typeof TRANSLATIONS.en | string) => string;
@@ -22,7 +22,14 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ t }) => {
         if (!input.trim() || isModerating) return;
 
         setIsModerating(true);
-        const { isAggressive } = await moderateChatMessage(input);
+        const prompt = `Is the following message aggressive, hateful, bullying, or highly inappropriate? Answer with only "yes" or "no".\n\nMessage: "${input}"`;
+        const responseText = await aiRouter.generateContent({
+            userTier: 'free',
+            taskType: 'basic',
+            prompt: prompt,
+        });
+
+        const isAggressive = responseText.toLowerCase().includes('yes');
 
         if (isAggressive) {
             setMessages(prev => [...prev, { user: 'System', text: t('chat_moderation_error'), system: true }]);

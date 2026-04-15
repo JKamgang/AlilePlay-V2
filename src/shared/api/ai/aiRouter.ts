@@ -26,7 +26,7 @@ function getGroqClient(): Groq {
     return groqClient;
 }
 
-export type UserTier = 'free' | 'preview' | 'plan-a' | 'plan-b' | 'plan-c';
+export type UserTier = 'free' | 'preview' | 'plan-a' | 'plan-b' | 'plan-c' | 'pro' | 'enterprise';
 
 export interface AIRequestContext {
     userTier: UserTier;
@@ -41,7 +41,11 @@ export const aiRouter = {
         const { userTier, taskType, prompt, systemPrompt, imageParts } = context;
 
         // Routing Logic
-        const usePremium = ['plan-a', 'plan-b', 'plan-c'].includes(userTier);
+        const usePremium = ['plan-a', 'plan-b', 'plan-c', 'pro', 'enterprise'].includes(userTier);
+
+        if (taskType === 'vision' && userTier !== 'enterprise') {
+            throw new Error("Access Denied: Computer Vision tasks require the Enterprise tier.");
+        }
 
         // Premium tasks require Gemini 1.5 Pro
         if (taskType === 'complex' || taskType === 'vision' || usePremium) {

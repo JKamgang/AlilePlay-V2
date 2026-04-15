@@ -26,7 +26,7 @@ export const moderateChatMessage = async (message: string): Promise<{ isAggressi
         const prompt = `Is the following message aggressive, hateful, bullying, or highly inappropriate? Answer with only "yes" or "no".\n\nMessage: "${message}"`;
 
         const response = await ai.models.generateContent({
-            model: 'gemini-3-flash-preview',
+            model: 'gemini-1.5-flash',
             contents: prompt,
         });
 
@@ -44,7 +44,7 @@ export const getSupportResponse = async (question: string): Promise<string> => {
         const prompt = `You are the Alileva Global Gaming Platform Assistant. Answer the following user question politely. If asked about the platform, explain that it offers Chess, Word Master, Checkers, and Monopoly. User question: "${question}"`;
 
         const response = await ai.models.generateContent({
-            model: 'gemini-3-flash-preview',
+            model: 'gemini-1.5-flash',
             contents: prompt,
         });
 
@@ -84,7 +84,7 @@ export const getWordAnalysis = async (word: string, detailLevel: 'basic' | 'full
 
     try {
         const response = await ai.models.generateContent({
-            model: "gemini-3-flash-preview",
+            model: "gemini-1.5-flash",
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
@@ -118,7 +118,7 @@ export const suggestBestWord = async (tiles: string[]): Promise<{ word: string, 
 
     try {
         const response = await ai.models.generateContent({
-            model: 'gemini-3-flash-preview',
+            model: 'gemini-1.5-flash',
             contents: prompt,
             config: {
                 responseMimeType: "application/json",
