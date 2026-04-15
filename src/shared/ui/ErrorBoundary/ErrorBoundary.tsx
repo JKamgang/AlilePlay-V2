@@ -25,8 +25,7 @@ class ErrorBoundary extends Component<Props, State> {
 
   public render() {
     if (this.state.hasError) {
-      // fix: Cast 'this' to any to resolve "Property 'props' does not exist on type 'ErrorBoundary'" in some TS environments
-      const { t } = (this as any).props;
+      const { t } = this.props;
       return (
         <div className="min-h-screen flex items-center justify-center bg-brand-dark text-white">
           <div className="text-center p-4">
@@ -43,8 +42,7 @@ class ErrorBoundary extends Component<Props, State> {
       );
     }
 
-    // fix: Cast 'this' to any to resolve "Property 'props' does not exist on type 'ErrorBoundary'"
-    return (this as any).props.children;
+    return this.props.children;
   }
 }
 
