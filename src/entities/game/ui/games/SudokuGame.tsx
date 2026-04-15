@@ -29,39 +29,42 @@ const SudokuGame: React.FC<SudokuGameProps> = ({ options, t }) => {
   const validateGrid = useCallback((currentGrid: (string | null)[]) => {
       const newConflicts = new Set<number>();
 
-      const checkGroup = (indices: number[]) => {
-          const values = new Map<string, number[]>();
-          indices.forEach(index => {
-              const value = currentGrid[index];
-              if (value) {
-                  if (!values.has(value)) {
-                      values.set(value, []);
-                  }
-                  values.get(value)!.push(index);
-              }
-          });
+      const totalCells = size * size;
 
-          for (const cells of values.values()) {
-              if (cells.length > 1) {
-                  cells.forEach(cellIndex => newConflicts.add(cellIndex));
-              }
-          }
-      };
+      const rowSeen: Record<string, number>[] = Array.from({ length: size }, () => ({}));
+      const colSeen: Record<string, number>[] = Array.from({ length: size }, () => ({}));
+      const boxSeen: Record<string, number>[] = Array.from({ length: size }, () => ({}));
 
-      for (let i = 0; i < size; i++) {
-          checkGroup(Array.from({ length: size }, (_, k) => i * size + k)); // Rows
-          checkGroup(Array.from({ length: size }, (_, k) => k * size + i)); // Columns
-      }
+      for (let i = 0; i < totalCells; i++) {
+          const val = currentGrid[i];
+          if (val) {
+              const row = Math.floor(i / size);
+              const col = i % size;
+              const box = Math.floor(row / subgridSize) * subgridSize + Math.floor(col / subgridSize);
 
-      for (let boxRow = 0; boxRow < size; boxRow += subgridSize) {
-          for (let boxCol = 0; boxCol < size; boxCol += subgridSize) {
-              const indices: number[] = [];
-              for (let r = 0; r < subgridSize; r++) {
-                  for (let c = 0; c < subgridSize; c++) {
-                      indices.push((boxRow + r) * size + (boxCol + c));
-                  }
+              const rowDict = rowSeen[row];
+              if (rowDict[val] !== undefined) {
+                  newConflicts.add(rowDict[val]);
+                  newConflicts.add(i);
+              } else {
+                  rowDict[val] = i;
               }
-              checkGroup(indices);
+
+              const colDict = colSeen[col];
+              if (colDict[val] !== undefined) {
+                  newConflicts.add(colDict[val]);
+                  newConflicts.add(i);
+              } else {
+                  colDict[val] = i;
+              }
+
+              const boxDict = boxSeen[box];
+              if (boxDict[val] !== undefined) {
+                  newConflicts.add(boxDict[val]);
+                  newConflicts.add(i);
+              } else {
+                  boxDict[val] = i;
+              }
           }
       }
       setConflicts(newConflicts);
