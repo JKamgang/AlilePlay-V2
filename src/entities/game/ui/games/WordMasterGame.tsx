@@ -72,7 +72,10 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     if (placements.size === 0) return;
 
     // fix: Explicitly cast Map keys to string to resolve "Property 'split' does not exist on type 'unknown'"
-    const placedCoords = Array.from(placements.keys()).map(key => (key as string).split(',').map(Number));
+    const placedCoords: number[][] = [];
+    for (const key of placements.keys()) {
+      placedCoords.push(key.split(',').map(Number));
+    }
     const isHorizontal = placedCoords.every(c => c[0] === placedCoords[0][0]);
     const isVertical = placedCoords.every(c => c[1] === placedCoords[0][1]);
 
@@ -103,7 +106,10 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     let wordScore = 0;
     let wordMultiplier = 1;
     // fix: Explicitly cast Map values to PlacedTile to resolve "Property 'tile' does not exist on type 'unknown'"
-    const word = Array.from(placements.values()).map(p => (p as PlacedTile).tile).join('');
+    let word = '';
+    for (const p of placements.values()) {
+        word += p.tile;
+    }
 
     placements.forEach((placement, key) => {
         const [y, x] = key.split(',').map(Number);
@@ -173,14 +179,22 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     }
   };
 
-  const currentPlacedWord = useMemo(() => Array.from(placements.values()).map(p => (p as PlacedTile).tile).join(''), [placements]);
+  const { currentPlacedWord, placedRackIndices } = useMemo(() => {
+      let word = '';
+      const indices = new Set<number>();
+      for (const p of placements.values()) {
+          word += p.tile;
+          indices.add(p.rackIndex);
+      }
+      return { currentPlacedWord: word, placedRackIndices: indices };
+  }, [placements]);
+
   const displayTiles = useMemo(() => {
-      const placedRackIndices = new Set(Array.from(placements.values()).map(p => (p as PlacedTile).rackIndex));
       return playerTiles.map((tile, index) => ({
           tile,
           placed: placedRackIndices.has(index)
       }));
-  }, [playerTiles, placements]);
+  }, [playerTiles, placedRackIndices]);
 
   const bonusStyles: { [key: string]: string } = {
     '2L': 'bg-cyan-800/70 text-cyan-200', '3L': 'bg-blue-800/70 text-blue-200',
