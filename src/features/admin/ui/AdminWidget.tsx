@@ -47,7 +47,7 @@ export const AdminWidget: React.FC = () => {
                     <label className="block text-sm text-gray-300 mb-1">Group Participation Mode</label>
                     <select
                         value={groupMode}
-                        onChange={(e) => setGroupMode(e.target.value as any)}
+                        onChange={(e) => setGroupMode(e.target.value as 'public' | 'private' | 'corporate')}
                         className="w-full bg-slate-700 text-white p-2 rounded border border-slate-600 focus:outline-none"
                     >
                         <option value="public">Public / Open</option>
