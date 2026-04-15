@@ -22,6 +22,11 @@ const PIECE_COMPONENTS: { [key in Piece['type']]: { w: React.FC<any>, b: React.F
     k: { w: WhiteKing, b: BlackKing },
 };
 
+const BOARD_SQUARES = Array.from({ length: 64 }, (_, i) => ({
+  row: Math.floor(i / 8),
+  col: i % 8
+}));
+
 const ChessGame: React.FC<ChessGameProps> = ({ mode, t }) => {
   const game = useMemo(() => new Chess(), []);
 
@@ -121,9 +126,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ mode, t }) => {
     <div className="flex flex-col lg:flex-row items-center justify-center h-full w-full gap-4 sm:gap-8 text-white p-2 sm:p-4">
       <div className="w-full max-w-lg aspect-square shadow-lg">
         <div className="grid grid-cols-8 grid-rows-8 w-full h-full rounded-md overflow-hidden border-2 border-gray-700">
-          {Array.from({ length: 8 }).flatMap((_, row) =>
-            Array.from({ length: 8 }).map((_, col) => getSquareComponent(row, col))
-          )}
+          {BOARD_SQUARES.map(({ row, col }) => getSquareComponent(row, col))}
         </div>
       </div>
 
