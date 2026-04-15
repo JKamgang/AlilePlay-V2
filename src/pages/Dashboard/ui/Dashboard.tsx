@@ -32,13 +32,24 @@ const Dashboard: React.FC<DashboardProps> = ({ handlePlayGame, t }) => {
         }, new Map<string, Game[]>());
     }, [t]);
 
-    const sortedLeaderboard = useMemo(() => {
-        return [...MOCK_LEADERBOARD].sort((a, b) => {
-            const scoreA = leaderboardFilter === 'overall' ? a.overallScore : (a.scores[leaderboardFilter] || 0);
-            const scoreB = leaderboardFilter === 'overall' ? b.overallScore : (b.scores[leaderboardFilter] || 0);
-            return scoreB - scoreA;
+    const precomputedLeaderboards = useMemo(() => {
+        const gameKeys = new Set<string>();
+        MOCK_LEADERBOARD.forEach(player => {
+            Object.keys(player.scores).forEach(key => gameKeys.add(key));
         });
-    }, [leaderboardFilter]);
+
+        const precomputed: Record<string, typeof MOCK_LEADERBOARD> = {
+            overall: [...MOCK_LEADERBOARD].sort((a, b) => b.overallScore - a.overallScore),
+        };
+
+        gameKeys.forEach(key => {
+            precomputed[key] = [...MOCK_LEADERBOARD].sort((a, b) => (b.scores[key] || 0) - (a.scores[key] || 0));
+        });
+
+        return precomputed;
+    }, []);
+
+    const sortedLeaderboard = precomputedLeaderboards[leaderboardFilter] || precomputedLeaderboards.overall;
 
     return (
         <div className="space-y-8 sm:space-y-12 animate-fade-in">
