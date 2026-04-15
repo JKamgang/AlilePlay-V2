@@ -1,9 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
-import Groq from "groq-sdk";
 
 // Initialize AI clients
 let geminiClient: GoogleGenAI | null = null;
-let groqClient: Groq | null = null;
 
 function getGeminiClient(): GoogleGenAI {
     if (!geminiClient) {
@@ -14,16 +12,6 @@ function getGeminiClient(): GoogleGenAI {
         geminiClient = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || process.env.API_KEY || 'mock' });
     }
     return geminiClient;
-}
-
-function getGroqClient(): Groq {
-    if (!groqClient) {
-        if (!process.env.GROQ_API_KEY) {
-            console.warn("GROQ_API_KEY environment variable not set, using mock.");
-        }
-        groqClient = new Groq({ apiKey: process.env.GROQ_API_KEY || 'mock', dangerouslyAllowBrowser: true });
-    }
-    return groqClient;
 }
 
 export type UserTier = 'free' | 'preview' | 'plan-a' | 'plan-b' | 'plan-c' | 'pro' | 'enterprise';
@@ -71,27 +59,29 @@ export const aiRouter = {
                 return "Premium AI service temporarily unavailable.";
             }
         } else {
-            // Basic tasks use Groq (Gemma 2) for speed and cost efficiency
+            // Basic tasks use Groq (Gemma 2) via backend for speed and cost efficiency
             try {
-                const groq = getGroqClient();
+                const messages: any[] = [{ role: 'user', content: prompt }];
 
-                if (process.env.GROQ_API_KEY === 'mock' || !process.env.GROQ_API_KEY) {
-                   return "Mock Basic AI Response: " + prompt.substring(0, 50) + "...";
-                }
-
-                const messages: any[] = [];
-                if (systemPrompt) {
-                    messages.push({ role: 'system', content: systemPrompt });
-                }
-                messages.push({ role: 'user', content: prompt });
-
-                const completion = await groq.chat.completions.create({
-                    messages,
-                    model: "gemma2-9b-it",
+                const response = await fetch('/api/groq', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        messages,
+                        systemPrompt
+                    })
                 });
-                return completion.choices[0]?.message?.content || "";
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                return data.content || "";
             } catch (error) {
-                console.error("Groq Error:", error);
+                console.error("Groq Backend Fetch Error:", error);
                 return "Basic AI service temporarily unavailable.";
             }
         }
