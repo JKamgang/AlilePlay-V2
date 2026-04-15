@@ -171,6 +171,9 @@ const TetrisGame: React.FC<TetrisGameProps> = ({ t }) => {
 
   const handleKeyDown = useCallback((e: KeyboardEvent) => {
     if (isGameOver) return;
+    if (['ArrowLeft', 'ArrowRight', 'ArrowDown', 'ArrowUp', ' '].includes(e.key)) {
+        e.preventDefault();
+    }
     if (e.key === 'ArrowLeft') movePlayer(-1);
     else if (e.key === 'ArrowRight') movePlayer(1);
     else if (e.key === 'ArrowDown') drop();
@@ -179,6 +182,7 @@ const TetrisGame: React.FC<TetrisGameProps> = ({ t }) => {
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);
+    gameAreaRef.current?.focus();
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handleKeyDown]);
 

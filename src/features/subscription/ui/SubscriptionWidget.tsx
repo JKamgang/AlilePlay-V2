@@ -17,15 +17,19 @@ export const SubscriptionWidget: React.FC = () => {
                 onChange={handleTierChange}
                 className="w-full bg-slate-700 text-white p-2 rounded border border-slate-600 focus:outline-none focus:border-blue-500"
             >
-                <option value="free">Free Tier</option>
+                <option value="free">Free (Explorer)</option>
+                <option value="pro">Pro (Analyst)</option>
+                <option value="enterprise">Enterprise (Visionary)</option>
                 <option value="preview">Preview Tier</option>
-                <option value="plan-a">Plan A (Premium)</option>
-                <option value="plan-b">Plan B (Pro)</option>
-                <option value="plan-c">Plan C (Enterprise)</option>
+                <option value="plan-a">Plan A</option>
+                <option value="plan-b">Plan B</option>
+                <option value="plan-c">Plan C</option>
             </select>
-            <p className="text-xs text-slate-400 mt-2">
-                Premium plans unlock Gemini 1.5 Pro AI, Computer Vision, Voice Analysis, and Match Recording.
-            </p>
+            <div className="text-xs text-slate-400 mt-2 space-y-1">
+                <p><strong>Free (Explorer):</strong> Ad-supported, basic AI (Gemma 2), local GIS.</p>
+                <p><strong>Pro (Analyst):</strong> Ad-free, Premium AI (Gemini 1.5 Pro), API access, Alile Pay/Shop.</p>
+                <p><strong>Enterprise (Visionary):</strong> Computer Vision (Gemma 4), Google Maps Premium, Full Whitelabeling.</p>
+            </div>
         </div>
     );
 };

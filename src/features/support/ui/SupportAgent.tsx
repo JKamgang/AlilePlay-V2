@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TRANSLATIONS } from '@/shared/lib/i18n/translations';
-import { getSupportResponse } from '@/shared/api/gemini/geminiService';
+import { aiRouter } from '@/shared/api/ai/aiRouter';
 
 interface SupportAgentProps {
     t: (key: keyof typeof TRANSLATIONS.en | string) => string;
@@ -19,8 +19,14 @@ const SupportAgent: React.FC<SupportAgentProps> = ({ t }) => {
         setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
         setIsThinking(true);
 
-        const response = await getSupportResponse(userMsg);
-        setMessages(prev => [...prev, { role: 'ai', text: response }]);
+        const prompt = `You are the Alileva Global Gaming Platform Assistant. Answer the following user question politely. If asked about the platform, explain that it offers Chess, Word Master, Checkers, and Monopoly. User question: "${userMsg}"`;
+        const responseText = await aiRouter.generateContent({
+            userTier: 'free',
+            taskType: 'basic',
+            prompt: prompt,
+        });
+
+        setMessages(prev => [...prev, { role: 'ai', text: responseText }]);
         setIsThinking(false);
     };
 

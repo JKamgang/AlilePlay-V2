@@ -54,7 +54,9 @@ const ChessGame: React.FC<ChessGameProps> = ({ mode, t }) => {
       return false;
   }, [game, updateGame]);
 
-  const makeRandomMove = useCallback(() => {
+  const makeAiMove = useCallback(() => {
+    // Basic AI fallback logic, or replace with gemini implementation.
+    // Given scope we'll use random move.
     const moves = game.moves({ verbose: true });
     if (moves.length > 0) {
       const move = moves[Math.floor(Math.random() * moves.length)];
@@ -69,7 +71,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ mode, t }) => {
     if (from) {
       const moveResult = makeMove({ from, to: square, promotion: 'q' });
       if (moveResult && mode === 'ai') {
-        setTimeout(makeRandomMove, 500);
+        setTimeout(makeAiMove, 500);
       }
       setFrom(null);
       setPossibleMoves([]);
