@@ -72,7 +72,7 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     if (placements.size === 0) return;
 
     // fix: Explicitly cast Map keys to string to resolve "Property 'split' does not exist on type 'unknown'"
-    const placedCoords = Array.from(placements.keys()).map(key => (key as string).split(',').map(Number));
+    const placedCoords = Array.from<string>(placements.keys()).map(key => key.split(',').map(Number));
     const isHorizontal = placedCoords.every(c => c[0] === placedCoords[0][0]);
     const isVertical = placedCoords.every(c => c[1] === placedCoords[0][1]);
 
@@ -103,12 +103,12 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     let wordScore = 0;
     let wordMultiplier = 1;
     // fix: Explicitly cast Map values to PlacedTile to resolve "Property 'tile' does not exist on type 'unknown'"
-    const word = Array.from(placements.values()).map(p => (p as PlacedTile).tile).join('');
+    const word = Array.from<PlacedTile>(placements.values()).map(p => p.tile).join('');
 
     placements.forEach((placement, key) => {
         const [y, x] = key.split(',').map(Number);
         // fix: Added type assertion for placement to resolve "Property 'tile' does not exist on type 'unknown'"
-        const letter = (placement as PlacedTile).tile;
+        const letter = placement.tile;
         let letterScore = LETTER_SCORES[letter] || 0;
         const bonus = BOARD_LAYOUT[y][x];
         if (bonus === '2L') letterScore *= 2;
@@ -126,9 +126,9 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     placements.forEach((placement, key) => {
         const [y, x] = key.split(',').map(Number);
         // fix: Added type assertion for placement to resolve "Property 'tile' does not exist on type 'unknown'"
-        newBoard[y][x] = (placement as PlacedTile).tile;
+        newBoard[y][x] = placement.tile;
         // fix: Added type assertion for placement to resolve "Property 'rackIndex' does not exist on type 'unknown'"
-        usedRackIndices.add((placement as PlacedTile).rackIndex);
+        usedRackIndices.add(placement.rackIndex);
     });
     setBoardState(newBoard);
 
@@ -173,9 +173,9 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     }
   };
 
-  const currentPlacedWord = useMemo(() => Array.from(placements.values()).map(p => (p as PlacedTile).tile).join(''), [placements]);
+  const currentPlacedWord = useMemo(() => Array.from<PlacedTile>(placements.values()).map(p => p.tile).join(''), [placements]);
   const displayTiles = useMemo(() => {
-      const placedRackIndices = new Set(Array.from(placements.values()).map(p => (p as PlacedTile).rackIndex));
+      const placedRackIndices = new Set(Array.from<PlacedTile>(placements.values()).map(p => p.rackIndex));
       return playerTiles.map((tile, index) => ({
           tile,
           placed: placedRackIndices.has(index)
