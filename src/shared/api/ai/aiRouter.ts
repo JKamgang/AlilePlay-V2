@@ -9,7 +9,6 @@ function getGeminiClient(): GoogleGenAI {
     if (!geminiClient) {
         if (!process.env.GEMINI_API_KEY && !process.env.API_KEY) {
             console.warn("GEMINI_API_KEY environment variable not set, using mock.");
-            // mock for now
         }
         geminiClient = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || process.env.API_KEY || 'mock' });
     }
