@@ -23,8 +23,12 @@ const InfographicWidget: React.FC<InfographicWidgetProps> = ({ dataString, userT
             });
             setInfographicPlan(response);
             // In a real implementation this would tie into a charting library like Recharts or a canvas element to draw.
-        } catch (err: any) {
-            setError(err.message || 'Failed to generate infographic layout.');
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message);
+            } else {
+                setError('Failed to generate infographic layout.');
+            }
         } finally {
             setIsLoading(false);
         }
