@@ -44,7 +44,7 @@ const GameContainer: React.FC<GameContainerProps> = ({ game, onClose, t }) => {
       case 'ludo':
         return <StaticGame game={game} t={t} />;
       case 'tictactoe':
-        return <TicTacToeGame game={game} options={game.option} t={t} />;
+        return <TicTacToeGame game={game} options={game.options} t={t} />;
       default:
         return <div className="text-white">This game is not implemented yet.</div>;
     }

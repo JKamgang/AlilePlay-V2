@@ -11,7 +11,7 @@ interface ChessGameProps {
 }
 
 // fix: Updated Move type to allow for promotion property
-type Move = { from: Square, to: Square, promotion?: 'q' | 'r' | 'b' | 'n' };
+type ShortMove = { from: string, to: string, promotion?: string };
 
 const PIECE_COMPONENTS: { [key in Piece['type']]: { w: React.FC<any>, b: React.FC<any> } } = {
     p: { w: WhitePawn, b: BlackPawn },
@@ -45,7 +45,7 @@ const ChessGame: React.FC<ChessGameProps> = ({ mode, t }) => {
     setGameStatus(getStatus());
   }, [game, getStatus]);
 
-  const makeMove = useCallback((move: Move | string) => {
+  const makeMove = useCallback((move: ShortMove | string) => {
       const result = game.move(move);
       if (result) {
           updateGame();

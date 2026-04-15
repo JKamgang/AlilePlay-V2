@@ -1,17 +1,20 @@
 
 import React, { useState, useEffect } from 'react';
-import type { Game } from '@/shared/types';
+import type { Game, GameOption } from '@/shared/types';
+import { TRANSLATIONS } from '@/shared/lib/i18n/translations';
 
 interface TicTacToeGameProps {
   game: Game;
-  options: any;
-  t: any;
+  options?: GameOption[];
+  t: (key: keyof typeof TRANSLATIONS.en | string) => string;
 }
 
 type Player = 'X' | 'O' | null;
 
+const EMPTY_BOARD: Player[] = Array(9).fill(null);
+
 const TicTacToeGame: React.FC<TicTacToeGameProps> = ({ game, t }) => {
-  const [board, setBoard] = useState<Player[]>(Array(9).fill(null));
+  const [board, setBoard] = useState<Player[]>(EMPTY_BOARD);
   const [isXNext, setIsXNext] = useState(true);
   const winner = calculateWinner(board);
 
@@ -41,7 +44,8 @@ const TicTacToeGame: React.FC<TicTacToeGameProps> = ({ game, t }) => {
 
   const renderSquare = (i: number) => {
     return (
-      <button 
+      <button
+        key={i}
         className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 bg-light-surface dark:bg-dark-surface border-2 border-brand-secondary flex items-center justify-center text-4xl md:text-5xl font-bold rounded-md transition-colors duration-200 hover:bg-brand-primary/20"
         onClick={() => handleClick(i)}
       >
@@ -64,11 +68,11 @@ const TicTacToeGame: React.FC<TicTacToeGameProps> = ({ game, t }) => {
       <h2 className="text-3xl font-bold mb-4">{game.nameKey ? t(game.nameKey) : 'Tic Tac Toe'}</h2>
       <div className="text-xl mb-4 font-semibold">{status}</div>
       <div className="grid grid-cols-3 gap-2">
-        {Array(9).fill(null).map((_, i) => renderSquare(i))}
+        {EMPTY_BOARD.map((_, i) => renderSquare(i))}
       </div>
       <button
         onClick={() => {
-          setBoard(Array(9).fill(null));
+          setBoard(EMPTY_BOARD);
           setIsXNext(true);
         }}
         className="mt-6 px-6 py-2 bg-brand-primary text-white font-semibold rounded-lg hover:bg-brand-secondary transition-colors"
