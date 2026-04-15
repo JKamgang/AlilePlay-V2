@@ -22,14 +22,14 @@ const Dashboard: React.FC<DashboardProps> = ({ handlePlayGame, t }) => {
     const [leaderboardFilter, setLeaderboardFilter] = useState('overall');
 
     const groupedGames = useMemo(() => {
-        return GAMES.reduce((acc, game) => {
+        return GAMES.reduce<Map<string, Game[]>>((acc, game) => {
             const category = t(game.categoryKey);
-            if (!acc[category]) {
-                acc[category] = [];
+            if (!acc.has(category)) {
+                acc.set(category, []);
             }
-            acc[category].push(game);
+            acc.get(category)!.push(game);
             return acc;
-        }, {} as Record<string, Game[]>);
+        }, new Map<string, Game[]>());
     }, [t]);
 
     const sortedLeaderboard = useMemo(() => {
@@ -88,12 +88,11 @@ const Dashboard: React.FC<DashboardProps> = ({ handlePlayGame, t }) => {
             {/* Game Grid */}
             <section>
                 <h2 className="text-3xl font-bold text-white mb-6">{t('select_a_game')}</h2>
-                 {Object.entries(groupedGames).map(([category, gamesInCategory]) => (
+                 {Array.from<[string, Game[]]>(groupedGames.entries()).map(([category, gamesInCategory]) => (
                     <div key={category} className="mb-8">
                         <h3 className="text-xl font-semibold text-brand-primary mb-4">{category}</h3>
                         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6">
-                            {/* fix: Added type assertion to gamesInCategory to resolve "Property 'map' does not exist on type 'unknown'" */}
-                            {(gamesInCategory as Game[]).map((game) => (
+                            {gamesInCategory.map((game) => (
                                 <GameCard key={game.id} game={game} onPlay={handlePlayGame} t={t} />
                             ))}
                         </div>
