@@ -2,6 +2,7 @@ import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { LETTER_SCORES, BOARD_LAYOUT, TILE_BAG } from '@/shared/constants';
 import { WordAnalysis } from '@/shared/types';
 import { TRANSLATIONS } from '@/shared/lib/i18n/translations';
+import { getWordAnalysis } from '@/shared/api/gemini/geminiService';
 import { aiRouter } from '@/shared/api/ai/aiRouter';
 import { ShieldCheckIcon } from '@/shared/ui/Icons/Icons';
 

@@ -13,16 +13,6 @@ export const GAMES: Game[] = [
   { id: 'uno', nameKey: 'game_uno', descriptionKey: 'desc_uno', icon: CardIcon, status: 'coming_soon', categoryKey: 'cat_card' },
   { id: 'solitaire', nameKey: 'game_solitaire', descriptionKey: 'desc_solitaire', icon: CardIcon, status: 'coming_soon', categoryKey: 'cat_card' },
   { id: 'ludo', nameKey: 'game_ludo', descriptionKey: 'desc_ludo', icon: LudoIcon, status: 'coming_soon', categoryKey: 'cat_board' },
-  { id: 'backgammon', nameKey: 'game_backgammon', descriptionKey: 'desc_backgammon', icon: LudoIcon, status: 'coming_soon', categoryKey: 'cat_board' },
-  { id: 'dominoes', nameKey: 'game_dominoes', descriptionKey: 'desc_dominoes', icon: LudoIcon, status: 'coming_soon', categoryKey: 'cat_board' },
-  { id: 'hearts', nameKey: 'game_hearts', descriptionKey: 'desc_hearts', icon: CardIcon, status: 'coming_soon', categoryKey: 'cat_card' },
-  { id: 'spades', nameKey: 'game_spades', descriptionKey: 'desc_spades', icon: CardIcon, status: 'coming_soon', categoryKey: 'cat_card' },
-  { id: 'blackjack', nameKey: 'game_blackjack', descriptionKey: 'desc_blackjack', icon: CardIcon, status: 'coming_soon', categoryKey: 'cat_card' },
-  { id: 'roulette', nameKey: 'game_roulette', descriptionKey: 'desc_roulette', icon: CardIcon, status: 'coming_soon', categoryKey: 'cat_board' },
-  { id: 'minesweeper', nameKey: 'game_minesweeper', descriptionKey: 'desc_minesweeper', icon: SudokuIcon, status: 'coming_soon', categoryKey: 'cat_puzzle' },
-  { id: '2048', nameKey: 'game_2048', descriptionKey: 'desc_2048', icon: SudokuIcon, status: 'coming_soon', categoryKey: 'cat_puzzle' },
-  { id: 'snake', nameKey: 'game_snake', descriptionKey: 'desc_snake', icon: SudokuIcon, status: 'coming_soon', categoryKey: 'cat_puzzle' },
-  { id: 'pacman', nameKey: 'game_pacman', descriptionKey: 'desc_pacman', icon: SudokuIcon, status: 'coming_soon', categoryKey: 'cat_puzzle' },
 ];
 
 export const MOCK_ANALYTICS_DATA = [

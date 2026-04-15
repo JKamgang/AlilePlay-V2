@@ -41,7 +41,7 @@ const TicTacToeGame: React.FC<TicTacToeGameProps> = ({ game, t }) => {
 
   const renderSquare = (i: number) => {
     return (
-      <button 
+      <button
         className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 bg-light-surface dark:bg-dark-surface border-2 border-brand-secondary flex items-center justify-center text-4xl md:text-5xl font-bold rounded-md transition-colors duration-200 hover:bg-brand-primary/20"
         onClick={() => handleClick(i)}
       >

@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({ currentLang, setLang }) => {
             <svg className="h-8 w-8 text-brand-primary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
             </svg>
-            <span className="text-xl font-bold ml-3 text-white">Alile Play</span>
+            <span className="text-xl font-bold ml-3 text-white">Alileva Games</span>
           </div>
           <div className="flex items-center">
             <div className="relative">
