@@ -23,22 +23,30 @@ const ChatWidget: React.FC<ChatWidgetProps> = ({ t }) => {
 
         setIsModerating(true);
         const prompt = `Is the following message aggressive, hateful, bullying, or highly inappropriate? Answer with only "yes" or "no".\n\nMessage: "${input}"`;
-        const responseText = await aiRouter.generateContent({
-            userTier: 'free',
-            taskType: 'basic',
-            prompt: prompt,
-        });
+        try {
+            const responseText = await aiRouter.generateContent({
+                userTier: 'free',
+                taskType: 'basic',
+                prompt: prompt,
+            });
 
-        const isAggressive = responseText.toLowerCase().includes('yes');
+            const isAggressive = responseText.toLowerCase().includes('yes');
 
-        if (isAggressive) {
-            setMessages(prev => [...prev, { user: 'System', text: t('chat_moderation_error'), system: true }]);
-        } else {
+            if (isAggressive) {
+                setMessages(prev => [...prev, { user: 'System', text: t('chat_moderation_error'), system: true }]);
+            } else {
+                setMessages(prev => [...prev, { user: 'You', text: input }]);
+            }
+
+            setInput('');
+        } catch (error) {
+            console.error("Chat Error:", error);
+            // Fallback to allowing the message if the AI moderation service is down
             setMessages(prev => [...prev, { user: 'You', text: input }]);
+            setInput('');
+        } finally {
+            setIsModerating(false);
         }
-
-        setInput('');
-        setIsModerating(false);
     };
 
     return (

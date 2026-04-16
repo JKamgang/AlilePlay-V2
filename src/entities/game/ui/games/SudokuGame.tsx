@@ -71,8 +71,13 @@ const SudokuGame: React.FC<SudokuGameProps> = ({ options, t }) => {
   }, [size, subgridSize]);
 
   useEffect(() => {
-    validateGrid(grid);
-  }, [grid, validateGrid]);
+    // We defer the initial validation to after the initial render to avoid setting state synchronously inside an effect
+    // But honestly we could just calculate conflicts synchronously without setting state.
+    const timeoutId = setTimeout(() => {
+        validateGrid(initial);
+    }, 0);
+    return () => clearTimeout(timeoutId);
+  }, [initial, validateGrid]);
 
   const handleInputChange = (index: number, value: string) => {
     const newGrid = [...grid];
@@ -83,6 +88,7 @@ const SudokuGame: React.FC<SudokuGameProps> = ({ options, t }) => {
     if (value === '' || (!isNaN(numValue) && numValue > 0 && numValue <= size)) {
         newGrid[index] = value === '' ? null : value;
         setGrid(newGrid);
+        validateGrid(newGrid);
     }
   };
 
