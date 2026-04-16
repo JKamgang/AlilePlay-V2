@@ -1,11 +1,11 @@
 
 import React, { useState, useEffect } from 'react';
-import type { Game, GameOption } from '@/shared/types';
+import type { Game } from '@/shared/types';
 import { TRANSLATIONS } from '@/shared/lib/i18n/translations';
 
 interface TicTacToeGameProps {
   game: Game;
-  options?: GameOption[];
+  options?: string;
   t: (key: keyof typeof TRANSLATIONS.en | string) => string;
 }
 

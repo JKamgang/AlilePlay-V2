@@ -148,7 +148,7 @@ const TetrisGame: React.FC<TetrisGameProps> = ({ t }) => {
     while(checkCollision(clonedPlayer, board, { moveX: 0, moveY: 0 })) {
         clonedPlayer.pos.x += offset;
         offset = -(offset + (offset > 0 ? 1 : -1));
-        if (offset > clonedPlayer.tetromino[0].length) {
+        if (Math.abs(offset) > clonedPlayer.tetromino[0].length) {
             clonedPlayer.pos.x = pos;
             return;
         }
