@@ -4,6 +4,7 @@ import Groq from 'groq-sdk';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { z } from 'zod';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -20,9 +21,24 @@ const groq = new Groq({
   apiKey: process.env.GROQ_API_KEY || 'mock'
 });
 
+const groqRequestSchema = z.object({
+  systemPrompt: z.string().optional(),
+  messages: z.array(
+    z.object({
+      role: z.enum(['user', 'system', 'assistant']),
+      content: z.string(),
+    })
+  ).optional()
+});
+
 app.post('/api/groq', async (req, res) => {
   try {
-    const { messages, systemPrompt } = req.body;
+    const parseResult = groqRequestSchema.safeParse(req.body);
+    if (!parseResult.success) {
+      return res.status(400).json({ error: 'Invalid request payload', details: parseResult.error.issues });
+    }
+
+    const { messages, systemPrompt } = parseResult.data;
 
     const groqMessages = [];
     if (systemPrompt) {
