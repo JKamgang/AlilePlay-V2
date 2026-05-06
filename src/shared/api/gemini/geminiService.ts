@@ -3,18 +3,12 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { MOCK_ANALYTICS_DATA } from '@/shared/constants';
 import { WordAnalysis } from '@/shared/types';
 
-let genAI: GoogleGenAI | null = null;
-
-function getAiClient(): GoogleGenAI {
-    if (!genAI) {
-        if (!process.env.API_KEY) {
-            console.error("API_KEY environment variable not set!");
-            throw new Error("API_KEY environment variable not set!");
-        }
-        genAI = new GoogleGenAI({apiKey: process.env.API_KEY});
-    }
-    return genAI;
+const apiKey = process.env.API_KEY;
+if (!apiKey) {
+    console.error("API_KEY environment variable not set!");
+    throw new Error("API_KEY environment variable not set!");
 }
+const aiClient = new GoogleGenAI({apiKey});
 
 export const getMockAnalytics = (): Promise<any[]> => {
     return new Promise(resolve => setTimeout(() => resolve(MOCK_ANALYTICS_DATA), 500));
@@ -22,10 +16,9 @@ export const getMockAnalytics = (): Promise<any[]> => {
 
 export const moderateChatMessage = async (message: string): Promise<{ isAggressive: boolean }> => {
     try {
-        const ai = getAiClient();
         const prompt = `Is the following message aggressive, hateful, bullying, or highly inappropriate? Answer with only "yes" or "no".\n\nMessage: "${message}"`;
 
-        const response = await ai.models.generateContent({
+        const response = await aiClient.models.generateContent({
             model: 'gemini-1.5-flash',
             contents: prompt,
         });
@@ -40,10 +33,9 @@ export const moderateChatMessage = async (message: string): Promise<{ isAggressi
 
 export const getSupportResponse = async (question: string): Promise<string> => {
     try {
-        const ai = getAiClient();
         const prompt = `You are the Alileva Global Gaming Platform Assistant. Answer the following user question politely. If asked about the platform, explain that it offers Chess, Word Master, Checkers, and Monopoly. User question: "${question}"`;
 
-        const response = await ai.models.generateContent({
+        const response = await aiClient.models.generateContent({
             model: 'gemini-1.5-flash',
             contents: prompt,
         });
@@ -57,8 +49,6 @@ export const getSupportResponse = async (question: string): Promise<string> => {
 
 export const getWordAnalysis = async (word: string, detailLevel: 'basic' | 'full'): Promise<WordAnalysis | null> => {
     if (!word) return null;
-
-    const ai = getAiClient();
 
     const fullSchema = {
         type: Type.OBJECT,
@@ -83,7 +73,7 @@ export const getWordAnalysis = async (word: string, detailLevel: 'basic' | 'full
     const prompt = `Provide a detailed analysis for the word "${word}". Also provide a reasonable point score as if it were a Scrabble word.`;
 
     try {
-        const response = await ai.models.generateContent({
+        const response = await aiClient.models.generateContent({
             model: "gemini-1.5-flash",
             contents: prompt,
             config: {
@@ -105,7 +95,6 @@ export const getWordAnalysis = async (word: string, detailLevel: 'basic' | 'full
 export const suggestBestWord = async (tiles: string[]): Promise<{ word: string, points: number } | null> => {
     if (tiles.length === 0) return null;
 
-    const ai = getAiClient();
     const prompt = `Given the following Scrabble tiles, what is the highest-scoring word that can be formed? The tiles are: ${tiles.join(', ')}. Provide the word and its calculated score.`;
 
     const schema = {
@@ -117,7 +106,7 @@ export const suggestBestWord = async (tiles: string[]): Promise<{ word: string, 
     };
 
     try {
-        const response = await ai.models.generateContent({
+        const response = await aiClient.models.generateContent({
             model: 'gemini-1.5-flash',
             contents: prompt,
             config: {
