@@ -1,9 +1,4 @@
 import React, { useState } from 'react';
-import { TRANSLATIONS } from '@/shared/lib/i18n/translations';
-
-interface MonopolyGameProps {
-  t: (key: keyof typeof TRANSLATIONS.en | string) => string;
-}
 
 const PROPERTIES = [
     { name: 'Start', type: 'go' },
@@ -20,7 +15,7 @@ const PROPERTIES = [
     { name: 'Main St', type: 'prop', price: 100, rent: 20 },
 ];
 
-const MonopolyGame: React.FC<MonopolyGameProps> = () => {
+const MonopolyGame: React.FC = () => {
     const [players, setPlayers] = useState([{ id: 1, pos: 0, money: 1500, color: 'bg-red-500', name: 'Player 1' }]);
     const [owned, setOwned] = useState<Record<number, number>>({});
     const [logs, setLogs] = useState<string[]>(['Welcome to Alileva Monopoly!']);
