@@ -67,11 +67,11 @@ const SudokuGame: React.FC<SudokuGameProps> = ({ options, t }) => {
               }
           }
       }
-      setConflicts(newConflicts);
+      return newConflicts;
   }, [size, subgridSize]);
 
   useEffect(() => {
-    validateGrid(grid);
+    setConflicts(validateGrid(grid));
   }, [grid, validateGrid]);
 
   const handleInputChange = (index: number, value: string) => {
