@@ -10,7 +10,6 @@ interface ChessGameProps {
   t: (key: keyof typeof TRANSLATIONS.en | string) => string;
 }
 
-// fix: Updated Move type to allow for promotion property
 type ShortMove = { from: string, to: string, promotion?: string };
 
 const PIECE_COMPONENTS: { [key in Piece['type']]: { w: React.FC<any>, b: React.FC<any> } } = {
@@ -65,7 +64,6 @@ const ChessGame: React.FC<ChessGameProps> = ({ mode, t }) => {
     const moves = game.moves({ verbose: true });
     if (moves.length > 0) {
       const move = moves[Math.floor(Math.random() * moves.length)];
-      // fix: Pass the SAN string to avoid type mismatch on the move object.
       makeMove(move.san);
     }
   }, [game, makeMove]);
