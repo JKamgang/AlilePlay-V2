@@ -98,7 +98,7 @@ export const getWordAnalysis = async (word: string, detailLevel: 'basic' | 'full
 
     } catch (error) {
         console.error("Error getting word analysis:", error);
-        return { definition: 'Sorry, there was an error analyzing this word.' };
+        return null;
     }
 };
 
