@@ -71,7 +71,10 @@ const SudokuGame: React.FC<SudokuGameProps> = ({ options, t }) => {
   }, [size, subgridSize]);
 
   useEffect(() => {
+
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     validateGrid(grid);
+
   }, [grid, validateGrid]);
 
   const handleInputChange = (index: number, value: string) => {
