@@ -18,7 +18,7 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
   const [boardState, setBoardState] = useState<BoardState>(createInitialBoard());
   const [tileBag, setTileBag] = useState<string[]>([]);
   const [playerTiles, setPlayerTiles] = useState<string[]>([]);
-  const [placements, setPlacements] = useState<Map<string, PlacedTile>>(new Map());
+  const [placements, setPlacements] = useState<Map<number, PlacedTile>>(new Map());
   const [selectedTileIndex, setSelectedTileIndex] = useState<number | null>(null);
   const [score, setScore] = useState(0);
   const [isFirstMove, setIsFirstMove] = useState(true);
@@ -53,11 +53,12 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
   };
 
   const handleBoardClick = (y: number, x: number) => {
-    if (selectedTileIndex === null || boardState[y][x] !== null || placements.has(`${y},${x}`)) return;
+    const placementKey = y * 15 + x;
+    if (selectedTileIndex === null || boardState[y][x] !== null || placements.has(placementKey)) return;
 
     const tile = playerTiles[selectedTileIndex];
     const newPlacements = new Map(placements);
-    newPlacements.set(`${y},${x}`, { tile, rackIndex: selectedTileIndex });
+    newPlacements.set(placementKey, { tile, rackIndex: selectedTileIndex });
     setPlacements(newPlacements);
     setSelectedTileIndex(null);
   };
@@ -71,8 +72,7 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     setError('');
     if (placements.size === 0) return;
 
-    // fix: Explicitly cast Map keys to string to resolve "Property 'split' does not exist on type 'unknown'"
-    const placedCoords = Array.from<string>(placements.keys()).map(key => key.split(',').map(Number));
+    const placedCoords = Array.from<number>(placements.keys()).map(key => [Math.floor(key / 15), key % 15]);
     const isHorizontal = placedCoords.every(c => c[0] === placedCoords[0][0]);
     const isVertical = placedCoords.every(c => c[1] === placedCoords[0][1]);
 
@@ -106,7 +106,8 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     const word = Array.from<PlacedTile>(placements.values()).map(p => p.tile).join('');
 
     placements.forEach((placement, key) => {
-        const [y, x] = key.split(',').map(Number);
+        const y = Math.floor(key / 15);
+        const x = key % 15;
         // fix: Added type assertion for placement to resolve "Property 'tile' does not exist on type 'unknown'"
         const letter = placement.tile;
         let letterScore = LETTER_SCORES[letter] || 0;
@@ -124,7 +125,8 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     const newBoard = boardState.map(row => [...row]);
     const usedRackIndices = new Set<number>();
     placements.forEach((placement, key) => {
-        const [y, x] = key.split(',').map(Number);
+        const y = Math.floor(key / 15);
+        const x = key % 15;
         // fix: Added type assertion for placement to resolve "Property 'tile' does not exist on type 'unknown'"
         newBoard[y][x] = placement.tile;
         // fix: Added type assertion for placement to resolve "Property 'rackIndex' does not exist on type 'unknown'"
@@ -194,7 +196,8 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
         <div className="w-full max-w-xl aspect-square grid grid-cols-15 bg-blue-900/30 p-1 sm:p-2 rounded-md shadow-lg">
             {boardState.map((row, y) => row.map((cell, x) => {
                 const key = `${y},${x}`;
-                const placement = placements.get(key);
+                const placementKey = y * 15 + x;
+                const placement = placements.get(placementKey);
                 const bonus = BOARD_LAYOUT[y][x];
                 const bonusClass = bonus ? bonusStyles[bonus] : 'bg-gray-700/50';
 
