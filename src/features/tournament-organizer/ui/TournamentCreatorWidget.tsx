@@ -9,8 +9,7 @@ export const TournamentCreatorWidget: React.FC = () => {
     const [isRecordingEnabled, setIsRecordingEnabled] = useState(false);
 
     // Commission Structure (e.g., AlilePlay takes 10%)
-    const platformFee = 0.10;
-    const estimatedPrizePool = (fee * 100) * (1 - platformFee); // Assuming 100 participants
+    const estimatedPrizePool = (fee * 100) * (1 - 0.10); // Assuming 100 participants
 
     if (!isPremium()) {
         return (
