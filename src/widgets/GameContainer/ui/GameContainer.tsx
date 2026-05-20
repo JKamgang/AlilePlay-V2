@@ -36,7 +36,7 @@ const GameContainer: React.FC<GameContainerProps> = ({ game, onClose, t }) => {
       case 'checkers':
         return <CheckersGame t={t} />;
       case 'monopoly':
-        return <MonopolyGame t={t} />;
+        return <MonopolyGame />;
       case 'poker':
       case 'uno':
       case 'solitaire':
