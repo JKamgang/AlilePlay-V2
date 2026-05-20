@@ -13,7 +13,23 @@ dotenv.config({ path: path.resolve(__dirname, '../../.env.local') });
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 const app = express();
-app.use(cors());
+
+const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:3000')
+  .split(',')
+  .map((origin) => origin.trim());
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
+  })
+);
+
 app.use(express.json());
 
 const groq = new Groq({
