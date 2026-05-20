@@ -29,7 +29,12 @@ const TicTacToeGame: React.FC<TicTacToeGameProps> = ({ game, t }) => {
   useEffect(() => {
     if (!isXNext && !winner) {
       const timeout = setTimeout(() => {
-        const emptySquares = board.map((sq, idx) => sq === null ? idx : -1).filter(idx => idx !== -1);
+        const emptySquares: number[] = [];
+        for (let idx = 0; idx < board.length; idx++) {
+          if (board[idx] === null) {
+            emptySquares.push(idx);
+          }
+        }
         if (emptySquares.length > 0) {
           const aiMove = emptySquares[Math.floor(Math.random() * emptySquares.length)];
           const newBoard = board.slice();
