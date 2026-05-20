@@ -6,7 +6,6 @@ export const TournamentCreatorWidget: React.FC = () => {
     const [name, setName] = useState('');
     const [game, setGame] = useState('chess');
     const [fee, setFee] = useState(10);
-    const [isRecordingEnabled, setIsRecordingEnabled] = useState(false);
 
     // Commission Structure (e.g., AlilePlay takes 10%)
     const platformFee = 0.10;
@@ -87,8 +86,6 @@ export const TournamentCreatorWidget: React.FC = () => {
                     <input
                         type="checkbox"
                         id="recording"
-                        checked={isRecordingEnabled}
-                        onChange={(e) => setIsRecordingEnabled(e.target.checked)}
                         className="accent-brand-primary"
                     />
                     <label htmlFor="recording" className="text-sm text-gray-300">Enable Cloud Recording (Premium AI Analysis)</label>
