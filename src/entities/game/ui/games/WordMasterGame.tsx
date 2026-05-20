@@ -175,7 +175,10 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
 
   const currentPlacedWord = useMemo(() => Array.from<PlacedTile>(placements.values()).map(p => p.tile).join(''), [placements]);
   const displayTiles = useMemo(() => {
-      const placedRackIndices = new Set(Array.from<PlacedTile>(placements.values()).map(p => p.rackIndex));
+      const placedRackIndices = new Set<number>();
+      for (const p of placements.values()) {
+          placedRackIndices.add(p.rackIndex);
+      }
       return playerTiles.map((tile, index) => ({
           tile,
           placed: placedRackIndices.has(index)
