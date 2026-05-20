@@ -31,7 +31,10 @@ const TicTacToeGame: React.FC<TicTacToeGameProps> = ({ game, t }) => {
       const timeout = setTimeout(() => {
         const emptySquares = board.map((sq, idx) => sq === null ? idx : -1).filter(idx => idx !== -1);
         if (emptySquares.length > 0) {
-          const aiMove = emptySquares[Math.floor(Math.random() * emptySquares.length)];
+          const randomBuffer = new Uint32Array(1);
+          window.crypto.getRandomValues(randomBuffer);
+          const randomIndex = randomBuffer[0] % emptySquares.length;
+          const aiMove = emptySquares[randomIndex];
           const newBoard = board.slice();
           newBoard[aiMove] = 'O';
           setBoard(newBoard);
