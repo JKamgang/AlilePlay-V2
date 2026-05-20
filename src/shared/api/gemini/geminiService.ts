@@ -32,8 +32,8 @@ export const moderateChatMessage = async (message: string): Promise<{ isAggressi
 
         const text = response.text?.trim().toLowerCase() || 'no';
         return { isAggressive: text.includes('yes') };
-    } catch (error) {
-        console.error("Error moderating chat message:", error);
+    } catch (error: unknown) {
+        console.error("Error moderating chat message:", error instanceof Error ? error.message : error);
         return { isAggressive: false };
     }
 };
@@ -49,8 +49,8 @@ export const getSupportResponse = async (question: string): Promise<string> => {
         });
 
         return response.text || "I'm sorry, I couldn't process that right now.";
-    } catch (error) {
-        console.error("Error getting support response:", error);
+    } catch (error: unknown) {
+        console.error("Error getting support response:", error instanceof Error ? error.message : error);
         return "Sorry, our support systems are currently busy. Please try again later.";
     }
 };
@@ -96,9 +96,9 @@ export const getWordAnalysis = async (word: string, detailLevel: 'basic' | 'full
         const jsonText = response.text?.trim() || '{}';
         return JSON.parse(jsonText) as WordAnalysis;
 
-    } catch (error) {
-        console.error("Error getting word analysis:", error);
-        return { definition: 'Sorry, there was an error analyzing this word.' };
+    } catch (error: unknown) {
+        console.error("Error getting word analysis:", error instanceof Error ? error.message : error);
+        return { definition: `Sorry, there was an error analyzing this word: ${error instanceof Error ? error.message : 'Unknown error'}` };
     }
 };
 
@@ -128,8 +128,8 @@ export const suggestBestWord = async (tiles: string[]): Promise<{ word: string, 
 
         const jsonText = response.text?.trim() || '{}';
         return JSON.parse(jsonText);
-    } catch (error) {
-        console.error("Error suggesting best word:", error);
+    } catch (error: unknown) {
+        console.error("Error suggesting best word:", error instanceof Error ? error.message : error);
         return null;
     }
 };
