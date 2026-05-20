@@ -108,7 +108,7 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     placements.forEach((placement, key) => {
         const [y, x] = key.split(',').map(Number);
         // fix: Added type assertion for placement to resolve "Property 'tile' does not exist on type 'unknown'"
-        const letter = placement.tile;
+        const letter = (placement as PlacedTile).tile;
         let letterScore = LETTER_SCORES[letter] || 0;
         const bonus = BOARD_LAYOUT[y][x];
         if (bonus === '2L') letterScore *= 2;
@@ -126,9 +126,9 @@ const WordMasterGame: React.FC<WordMasterGameProps> = ({ t }) => {
     placements.forEach((placement, key) => {
         const [y, x] = key.split(',').map(Number);
         // fix: Added type assertion for placement to resolve "Property 'tile' does not exist on type 'unknown'"
-        newBoard[y][x] = placement.tile;
+        newBoard[y][x] = (placement as PlacedTile).tile;
         // fix: Added type assertion for placement to resolve "Property 'rackIndex' does not exist on type 'unknown'"
-        usedRackIndices.add(placement.rackIndex);
+        usedRackIndices.add((placement as PlacedTile).rackIndex);
     });
     setBoardState(newBoard);
 
