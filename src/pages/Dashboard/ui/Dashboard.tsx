@@ -33,18 +33,17 @@ const Dashboard: React.FC<DashboardProps> = ({ handlePlayGame, t }) => {
     }, [t]);
 
     const precomputedLeaderboards = useMemo(() => {
-        const gameKeys = new Set<string>();
-        MOCK_LEADERBOARD.forEach(player => {
-            Object.keys(player.scores).forEach(key => gameKeys.add(key));
-        });
-
         const precomputed: Record<string, typeof MOCK_LEADERBOARD> = {
             overall: [...MOCK_LEADERBOARD].sort((a, b) => b.overallScore - a.overallScore),
         };
 
-        gameKeys.forEach(key => {
-            precomputed[key] = [...MOCK_LEADERBOARD].sort((a, b) => (b.scores[key] || 0) - (a.scores[key] || 0));
-        });
+        // We know what games exist, so we extract the keys exactly from the first player, if any
+        const firstPlayerScores = MOCK_LEADERBOARD[0]?.scores || {};
+        const gameKeys = Object.keys(firstPlayerScores);
+
+        for (const key of gameKeys) {
+             precomputed[key] = [...MOCK_LEADERBOARD].sort((a, b) => (b.scores[key] || 0) - (a.scores[key] || 0));
+        }
 
         return precomputed;
     }, []);
